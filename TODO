@@ -1,0 +1,4 @@
+## Things TODO in GWareGameLib
+
+1.  Threading
+2.  Integrate SDL_Image loading routines for at least PNG

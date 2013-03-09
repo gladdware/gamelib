@@ -8,6 +8,15 @@ Makefile.in
 /aclocal.m4
 /compile
 /configure
+/config.*
 /depcomp
 /install-sh
 /missing
+/ltmain.sh
+/m4/libtool.m4
+/m4/lt*
+
+# Eclipse dev files
+/.project
+/.cproject
+
