@@ -1,6 +1,7 @@
 # http://www.gnu.org/software/automake
 
 Makefile.in
+config.h.in
 
 # http://www.gnu.org/software/autoconf
 
@@ -19,4 +20,16 @@ Makefile.in
 # Eclipse dev files
 /.project
 /.cproject
+
+# build artifacts
+.deps
+.libs
+Makefile
+config.h
+*.o
+*.lo
+*.la
+stamp-h1
+tst/test*
+libtool
 
