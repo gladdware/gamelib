@@ -64,11 +64,12 @@ Logger::~Logger() {
 std::ostringstream &Logger::get() {
     // setup timestamp
     unsigned seconds = mTime.tv_sec;
-    long uSeconds = long(roundl((long double)mTime.tv_nsec / 1000.0));
+//    long uSeconds = long(roundl((long double)mTime.tv_nsec / 1000.0));
+    long mSeconds = long(roundl((long double)mTime.tv_nsec / 1000000.0));
     // format timestamp
     std::stringstream ss;
-    ss << std::setw(4) << std::setfill(' ') << seconds << '.'
-            << std::setw(6) << std::setfill('0') << uSeconds;
+    ss << std::setw(5) << std::setfill(' ') << seconds << '.'
+            << std::setw(3) << std::setfill('0') << mSeconds;
     // write timestamp
     mStream << "[" << ss.str() << "]";
     // write level string

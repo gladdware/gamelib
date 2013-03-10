@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([gladdware-gamelib], [0.0.0], [gladdware@alexgladd.com])
+AC_INIT([gladdware-gamelib], [0.0.1], [gladdware@alexgladd.com])
 AC_CONFIG_SRCDIR([src/App.h])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -26,6 +26,8 @@ LT_INIT
 # Checks for libraries.
 AC_CHECK_LIB([m], [roundl])
 AC_CHECK_LIB([rt], [clock_gettime])
+PKG_CHECK_MODULES([LIBGL], [gl])
+PKG_CHECK_MODULES([LIBGLU], [glu])
 PKG_CHECK_MODULES([LIBSDL], [sdl])
 PKG_CHECK_MODULES([LIBSDL_IMAGE], [SDL_image])
 

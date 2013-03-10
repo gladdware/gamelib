@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gladdware-gamelib.  If not, see <http://www.gnu.org/licenses/>.
  *
- * TestApp.cpp
- * Created on: Mar 3, 2013
+ * TestGlApp.cpp
+ * Created on: Mar 10, 2013
  */
 
-#include <App.h>
+#include <OpenglApp.h>
 #include <evt/EventHandler.h>
 #include <img/Surface.h>
 #include <log/Logger.h>
 
 using namespace gware;
 
-class TestApp : public App, public EventHandler {
+class TestGlApp : public OpenglApp, public EventHandler {
 public:
-    TestApp(AppContext ctx) : App(ctx) { test = NULL; }
-    virtual ~TestApp() {}
+    TestGlApp(AppContext ctx) : OpenglApp(ctx) { test = NULL; }
+    virtual ~TestGlApp() {}
 
 protected:
     bool onInit() {
@@ -43,9 +43,9 @@ protected:
 //        LOG(DEBUG) << "Update with " << elapsedMs << "ms elapsed";
     }
     void onRender() {
-        Surface::blit(mRootSurface, test, 0, 0);
-
-        SDL_Flip(mRootSurface);
+//        Surface::blit(mRootSurface, test, 0, 0);
+//
+//        SDL_Flip(mRootSurface);
     }
     void onCleanup() {
         if(test != NULL) {
@@ -67,12 +67,12 @@ int main(int argc, char *argv[]) {
     ctx.width = 800;
     ctx.height = 600;
     ctx.bpp = 32;
-    ctx.videoModeFlags = (SDL_HWSURFACE | SDL_DOUBLEBUF);
+    ctx.videoModeFlags = (SDL_HWSURFACE | SDL_OPENGL);
 
-    TestApp app(ctx);
+    TestGlApp app(ctx);
 
     app.setTargetFramerate(60);
-    app.setWindowTitle("TestApp");
+    app.setWindowTitle("TestGlApp");
     app.setEventHandler(&app);
 
     return app.execute();

@@ -27,8 +27,6 @@
 #include <cstdio>
 #include <cstring>
 
-#define DEF_CAPTION "SDL App"
-
 namespace gware {
 
 App::App()
@@ -38,6 +36,21 @@ App::App()
       mWindowTitle(NULL),
       mRootSurface(NULL),
       mEvtHandler(NULL) {
+    // setup default app context
+    mContext.width = 640;
+    mContext.height = 480;
+    mContext.bpp = 32;
+    mContext.videoModeFlags = (SDL_HWSURFACE | SDL_DOUBLEBUF);
+}
+
+App::App(AppContext ctx)
+    : mRunFlag(true),
+      mLastLoopTimeMs(0),
+      mTgtFrameLenMs(DEF_FRAME_LEN_MS),
+      mWindowTitle(NULL),
+      mRootSurface(NULL),
+      mEvtHandler(NULL),
+      mContext(ctx) {
     // nop
 }
 
@@ -51,8 +64,13 @@ int App::execute() {
     if(!init()) {
         LOG(CRIT) << "Initialization failure; aborting execution";
         return -1;
+    } else if(!onInit()) {
+        // account for core init success, then user init failure
+        LOG(CRIT) << "User initialization failure; aborting execution";
+        cleanup();
+        return -1;
     }
-    // TODO should account for core init success, then user init failure
+    // else run exec loop
 
     SDL_Event evt;
 
@@ -86,6 +104,7 @@ int App::execute() {
     }
 
     // done; cleanup
+    onCleanup();
     cleanup();
 
     return 0;
@@ -117,7 +136,7 @@ void App::setWindowTitle(char *title) {
 void App::setEventHandler(EventHandlerIntf *evtHdl) {
     // TODO protect with a mutex
     // destroy current handler if we have one
-    if(mEvtHandler != NULL && mEvtHandler != (EventHandlerIntf*)this) {
+    if(mEvtHandler != NULL && mEvtHandler != dynamic_cast<EventHandlerIntf*>(this)) {
         delete mEvtHandler;
     }
 
@@ -150,11 +169,14 @@ bool App::init() {
 
     // init SDL
     if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+        LOGF(ERROR, "SDL_Init failure: %s", SDL_GetError());
         return false;
     }
 
     // try to setup root surface
-    mRootSurface = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    mRootSurface = SDL_SetVideoMode(mContext.width, mContext.height,
+            mContext.bpp, mContext.videoModeFlags);
+
     if(mRootSurface == NULL) {
         return false;
     } else {
@@ -164,14 +186,11 @@ bool App::init() {
             SDL_WM_SetCaption(DEF_CAPTION, DEF_CAPTION);
         }
 
-        // user init
-        return onInit();
+        return true;
     }
 }
 
 void App::cleanup() {
-    // user cleanup
-    onCleanup();
     // standard cleanup
     SDL_FreeSurface(mRootSurface);
     SDL_Quit();

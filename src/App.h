@@ -27,18 +27,37 @@
 #include <SDL/SDL.h>
 
 #define DEF_FRAME_LEN_MS 33
+#define DEF_CAPTION "SDL App"
 
 namespace gware {
 
 /**
- * A generic application
+ * Container for App setup params
+ */
+struct AppContext {
+    int width;              ///< App window resolution width in pixels
+    int height;             ///< App window resolution height in pixels
+    int bpp;                ///< Bits per pixel
+    Uint32 videoModeFlags;  ///< SDL video mode flags
+};
+
+/**
+ * A generic SDL application
  */
 class App {
 public:
     /**
-     * Constructor
+     * Default constructor
+     * Creates a 640x480 app, with bpp=32 and flags set to
+     * (SDL_HWSURFACE | SDL_DOUBLEBUF)
      */
     App();
+
+    /**
+     * Constructor
+     * Create an app with the give context params
+     */
+    App(AppContext ctx);
 
     /**
      * Destructor
@@ -78,17 +97,17 @@ protected:
      *
      * @return true if initialization was successful
      */
-    bool init();
+    virtual bool init();
 
     /**
      * Performs basic SDL teardown.
      */
-    void cleanup();
+    virtual void cleanup();
 
     /**
-     * Perform user initialization. Called in the init function after SDL has
-     * been initialized and the video mode has been set. If you want to use
-     * OpenGL, this is where you'd want to initialize it.
+     * Perform user initialization. Called after SDL has been initialized and
+     * the video mode has been set. If you want to use OpenGL, this is where
+     * you'd want to initialize it.
      * Subclasses must implement!
      *
      * @return true if initialization was successful
@@ -110,7 +129,7 @@ protected:
     virtual void onRender() = 0;
 
     /**
-     * Perform user cleanup. Called immediately upon entering the cleanup
+     * Perform user cleanup. Called immediately before the cleanup
      * function. Teardown anything you set up in onInit.
      */
     virtual void onCleanup() = 0;
@@ -119,13 +138,14 @@ protected:
     /** Root scene surface */
     SDL_Surface *mRootSurface;
 
-private:
     bool mRunFlag;              ///< is the app currently running?
     Uint32 mLastLoopTimeMs;     ///< last exec time of the main loop (ms)
     Uint32 mTgtFrameLenMs;      ///< target frame duration (ms)
     char *mWindowTitle;         ///< desired window title
     EventHandlerIntf *mEvtHandler;  ///< the current event handler
+    AppContext mContext;        ///< app creation context
 
+private:
     /**
      * Thread-safe event dispatcher
      */

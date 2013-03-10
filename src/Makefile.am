@@ -1,27 +1,39 @@
 
-AM_CPPFLAGS = $(PTHREAD_CFLAGS) $(LIBSDL_CFLAGS) $(LIBSDL_IMAGE_CFLAGS)
+AM_CPPFLAGS = \
+    $(PTHREAD_CFLAGS) \
+    $(LIBGL_CFLAGS) \
+    $(LIBGLU_CFLAGS) \
+    $(LIBSDL_CFLAGS) \
+    $(LIBSDL_IMAGE_CFLAGS)
+
 AM_LDFLAGS  = $(PTHREAD_LIBS)
 
-lib_LTLIBRARIES = libgwaresdlgame.la
+lib_LTLIBRARIES = libgwaregame.la
 
-libgwaresdlgame_la_SOURCES = \
+libgwaregame_la_SOURCES = \
     log/Logger.cpp \
     evt/EventHandler.cpp \
     img/Surface.cpp \
-    App.cpp
+    util/FpsCounter.cpp \
+    App.cpp \
+    OpenglApp.cpp
 
-libgwaresdlgame_la_LIBADD = \
+libgwaregame_la_LIBADD = \
+    $(LIBGL_LIBS) \
+    $(LIBGLU_LIBS) \
     $(LIBSDL_LIBS) \
     $(LIBSDL_IMAGE_LIBS)
 
-libgwaresdlgame_la_LDFLAGS = -version-info 0:0:0
+libgwaregame_la_LDFLAGS = -version-info 1:0:1
 
-libgwaresdlgame_la_includedir = $(includedir)/gwaresdlgame
+libgwaregame_la_includedir = $(includedir)/gwaregame
 
-libgwaresdlgame_la_include_HEADERS = \
+libgwaregame_la_include_HEADERS = \
     log/Logger.h \
     evt/EventHandlerIntf.h \
     evt/EventHandler.h \
     img/Surface.h \
-    App.h
+    util/FpsCounter.h \
+    App.h \
+    OpenglApp.h
 
