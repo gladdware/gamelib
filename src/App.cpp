@@ -74,6 +74,7 @@ int App::execute() {
 
     SDL_Event evt;
 
+    LOG(DEBUG) << "Starting App execute loop";
     while(mRunFlag) {
         // pull time
         Uint32 frameStartMs = SDL_GetTicks();
@@ -160,6 +161,8 @@ bool App::init() {
         return false;
     }
 
+    LOG(DEBUG) << "App init";
+
     // dump version info
     SDL_version v;
     SDL_VERSION(&v);
@@ -191,6 +194,7 @@ bool App::init() {
 }
 
 void App::cleanup() {
+    LOG(DEBUG) << "App cleanup";
     // standard cleanup
     SDL_FreeSurface(mRootSurface);
     SDL_Quit();

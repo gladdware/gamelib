@@ -64,7 +64,6 @@ Logger::~Logger() {
 std::ostringstream &Logger::get() {
     // setup timestamp
     unsigned seconds = mTime.tv_sec;
-//    long uSeconds = long(roundl((long double)mTime.tv_nsec / 1000.0));
     long mSeconds = long(roundl((long double)mTime.tv_nsec / 1000000.0));
     // format timestamp
     std::stringstream ss;

@@ -24,6 +24,7 @@
 #define GWARE_SURFACE_H_
 
 #include <SDL/SDL.h>
+#include <GL/gl.h>
 
 namespace gware {
 
@@ -56,6 +57,30 @@ public:
      * coordinates on the destination.
      */
     static void blit(SDL_Surface *dest, SDL_Surface *src, Sint16 destX, Sint16 destY);
+
+    /**
+     * Attempts to load an image into a new OpenGL texture (represented by the
+     * give texture ID). The image is first loaded with SDL, then transformed
+     * and bound to the OpenGL texture. If the image has an alpha channel and
+     * the current display format supports alpha channels, it will be preserved.
+     *
+     * Texture IDs must be created with glGenTextures.
+     *
+     * Users are responsible for freeing OpenGL textures.
+     *
+     * @param texId The OpenGL texture ID
+     * @param filename Path to image file to load
+     * @return A new SDL_Surface for the image, or NULL on any errors
+     */
+    static SDL_Surface *loadGlTexture(GLuint texId, const char *filename);
+
+    /**
+     * Shortcut for drawing a texture on an OpenGL quad primitive. Draws an
+     * OpenGL quad at the given location with the given size with the texture
+     * mapped on top of it. Assumes the given texture ID maps to a texture that
+     * has already been created.
+     */
+    static void drawQuadTexture(GLuint texId, int destX, int destY, int width, int height);
 
 protected:
     // Should never be instantiated

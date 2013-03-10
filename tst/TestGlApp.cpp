@@ -29,12 +29,13 @@ using namespace gware;
 
 class TestGlApp : public OpenglApp, public EventHandler {
 public:
-    TestGlApp(AppContext ctx) : OpenglApp(ctx) { test = NULL; }
+    TestGlApp(AppContext ctx, OpenglContext glCtx) : OpenglApp(ctx, glCtx) { test = NULL; }
     virtual ~TestGlApp() {}
 
 protected:
     bool onInit() {
-        test = Surface::load("/home/agladd/alpha-test.png");
+        glGenTextures(1, textures);
+        test = Surface::loadGlTexture(textures[0], "/home/agladd/alpha-test.png");
 
         if(test == NULL) return false;
         else return true;
@@ -43,14 +44,19 @@ protected:
 //        LOG(DEBUG) << "Update with " << elapsedMs << "ms elapsed";
     }
     void onRender() {
-//        Surface::blit(mRootSurface, test, 0, 0);
-//
-//        SDL_Flip(mRootSurface);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+
+        Surface::drawQuadTexture(textures[0], 0, 0, test->w, test->h);
+
+        SDL_GL_SwapBuffers();
     }
     void onCleanup() {
         if(test != NULL) {
             SDL_FreeSurface(test);
         }
+
+        glDeleteTextures(1, textures);
     }
     void onExit() {
         requestShutdown();
@@ -58,6 +64,7 @@ protected:
 
 private:
     SDL_Surface *test;
+    GLuint textures[1];
 };
 
 int main(int argc, char *argv[]) {
@@ -69,7 +76,18 @@ int main(int argc, char *argv[]) {
     ctx.bpp = 32;
     ctx.videoModeFlags = (SDL_HWSURFACE | SDL_OPENGL);
 
-    TestGlApp app(ctx);
+    OpenglContext glCtx;
+    glCtx.colorBits = 8;
+    glCtx.colorAccumBits = 8;
+    glCtx.alphaBits = 8;
+    glCtx.alphaAccumBits = 8;
+    glCtx.depthBits = 16;
+    glCtx.bufferBits = 32;
+    glCtx.doubleBuffer = true;
+    glCtx.antiAlias = false;
+    glCtx.aaSamples = 2;
+
+    TestGlApp app(ctx, glCtx);
 
     app.setTargetFramerate(60);
     app.setWindowTitle("TestGlApp");

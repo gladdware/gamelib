@@ -102,6 +102,7 @@ bool OpenglApp::init() {
             mContext.bpp, mContext.videoModeFlags);
 
     if(mRootSurface == NULL) {
+        LOGF(ERROR, "SDL_SetVideoMode failure: %s", SDL_GetError());
         return false;
     } else {
         if(mWindowTitle != NULL) {
@@ -110,17 +111,21 @@ bool OpenglApp::init() {
             SDL_WM_SetCaption(DEF_CAPTION, DEF_CAPTION);
         }
 
-        LOGF(INFO, "OpenGL version: %s", glGetString(GL_VERSION));
+        // print OpenGL info
+        LOG(INFO) << "OpenGL Info:";
+        LOGF(INFO, "  Vendor:   %s", glGetString(GL_VENDOR));
+        LOGF(INFO, "  Renderer: %s", glGetString(GL_RENDERER));
+        LOGF(INFO, "  Version:  %s", glGetString(GL_VERSION));
 
         // OpenGL init
-        glClearColor(0, 0, 0, 0);
+        glClearColor(0.0, 0.0, 0.0, 0.0);
 
         glViewport(0, 0, mContext.width, mContext.height);
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
 
-        glOrtho(0, mContext.width, mContext.height, 0, 1, -1);
+        glOrtho(0.0, mContext.width, mContext.height, 0.0, 1.0, -1.0);
 
         glMatrixMode(GL_MODELVIEW);
 

@@ -15,6 +15,7 @@ libgwaregame_la_SOURCES = \
     evt/EventHandler.cpp \
     img/Surface.cpp \
     util/FpsCounter.cpp \
+    util/OpenglErr.cpp \
     App.cpp \
     OpenglApp.cpp
 
@@ -34,6 +35,7 @@ libgwaregame_la_include_HEADERS = \
     evt/EventHandler.h \
     img/Surface.h \
     util/FpsCounter.h \
+    util/OpenglErr.h \
     App.h \
     OpenglApp.h
 

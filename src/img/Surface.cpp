@@ -22,6 +22,7 @@
 
 #include "Surface.h"
 #include "log/Logger.h"
+#include "util/OpenglErr.h"
 
 #include <SDL/SDL_image.h>
 
@@ -76,6 +77,61 @@ void Surface::blit(SDL_Surface *dest, SDL_Surface *src, Sint16 destX, Sint16 des
 
         SDL_BlitSurface(src, NULL, dest, &r);
     }
+}
+
+SDL_Surface *Surface::loadGlTexture(GLuint texId, const char *filename) {
+    SDL_Surface *tmp = load(filename);
+
+    if(tmp == NULL) {
+        return false;
+    }
+
+    // check if we have alpha
+    int mode;
+    if(tmp->format->BytesPerPixel == 4) {
+        mode = GL_RGBA;
+    } else {
+        mode = GL_RGB;
+    }
+
+    // clear error state
+    OpenglErr::clear();
+
+    // create the texture
+    glBindTexture(GL_TEXTURE_2D, texId);
+    glTexImage2D(GL_TEXTURE_2D, 0, mode, tmp->w, tmp->h, 0, mode, GL_UNSIGNED_BYTE, tmp->pixels);
+    // set texture params
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // check for errors
+    if(OpenglErr::checkErrs()) {
+        LOG(ERROR) << "Failed to create OpenGL texture";
+        SDL_FreeSurface(tmp);
+        return NULL;
+    } else {
+        return tmp;
+    }
+}
+
+void Surface::drawQuadTexture(GLuint texId, int destX, int destY, int width, int height) {
+    // clear error state
+    OpenglErr::clear();
+
+    glBindTexture(GL_TEXTURE_2D, texId);
+
+    glBegin(GL_QUADS);
+
+    // 4 vertices
+    glTexCoord2f(0.0, 0.0); glVertex3i(destX, destY, 0);
+    glTexCoord2f(1.0, 0.0); glVertex3i(destX+width, destY, 0);
+    glTexCoord2f(1.0, 1.0); glVertex3i(destX+width, destY+height, 0);
+    glTexCoord2f(0.0, 1.0); glVertex3i(destX, destY+height, 0);
+
+    glEnd();
+
+    // print any errors
+    OpenglErr::checkErrs();
 }
 
 } /* namespace gware */
