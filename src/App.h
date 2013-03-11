@@ -23,7 +23,7 @@
 #ifndef GWARE_APP_H_
 #define GWARE_APP_H_
 
-#include "evt/EventHandlerIntf.h"
+#include "EventHandlerIntf.h"
 #include <SDL/SDL.h>
 
 #define DEF_FRAME_LEN_MS 33

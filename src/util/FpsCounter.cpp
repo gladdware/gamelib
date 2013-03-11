@@ -48,7 +48,8 @@ void FpsCounter::addFrameTime(Uint32 frameTime) {
     if(mFrameTimes.size() >= mWindowSize) {
         // TODO lock before new fps
         Uint32 sum = std::accumulate(mFrameTimes.begin(), mFrameTimes.end(), 0);
-        mLastFps = float(sum) / float(mFrameTimes.size());
+        float avgFrameTime = float(sum) / float(mFrameTimes.size());
+        mLastFps = 1000.0 / avgFrameTime;
 
         mFrameTimes.clear();
     }

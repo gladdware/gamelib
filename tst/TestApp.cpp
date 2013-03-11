@@ -21,9 +21,9 @@
  */
 
 #include <App.h>
-#include <evt/EventHandler.h>
-#include <img/Surface.h>
-#include <log/Logger.h>
+#include <EventHandler.h>
+#include <Surface.h>
+#include <Logger.h>
 
 using namespace gware;
 

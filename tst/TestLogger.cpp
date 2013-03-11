@@ -20,7 +20,7 @@
  * Created on: Mar 4, 2013
  */
 
-#include <log/Logger.h>
+#include <Logger.h>
 
 int main(int argc, char *argv[]) {
 

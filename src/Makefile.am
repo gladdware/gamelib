@@ -1,5 +1,9 @@
+# automake for libgwaregame
+
+include ../Common.mk
 
 AM_CPPFLAGS = \
+    $(GWAREGAME_IPATH) \
     $(PTHREAD_CFLAGS) \
     $(LIBGL_CFLAGS) \
     $(LIBGLU_CFLAGS) \

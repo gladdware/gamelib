@@ -36,9 +36,11 @@
 #define _LOG(level) \
     gware::Logger(level).get() << " " __FILE__  ":"  << __LINE__ << ": "
 
+// Simple logging macro
 #define LOG(level) \
     if(gware::Logger::getLogLevel() >= LVL2INT(gware::Logger::LOG_##level)) _LOG(LVL2INT(gware::Logger::LOG_##level))
 
+// Simple format logging macro
 #define LOGF(level, fmt, ...) \
     if(gware::Logger::getLogLevel() >= LVL2INT(gware::Logger::LOG_##level)) {\
         char _logf_formatted[FMT_STR_MAX_LEN] = {'\0'}; \
