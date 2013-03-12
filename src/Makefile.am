@@ -20,6 +20,7 @@ libgwaregame_la_SOURCES = \
     img/Surface.cpp \
     util/FpsCounter.cpp \
     util/OpenglErr.cpp \
+    map/Tile.cpp \
     App.cpp \
     OpenglApp.cpp
 
@@ -40,6 +41,7 @@ libgwaregame_la_include_HEADERS = \
     img/Surface.h \
     util/FpsCounter.h \
     util/OpenglErr.h \
+    map/Tile.h \
     App.h \
     OpenglApp.h
 

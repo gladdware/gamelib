@@ -5,4 +5,5 @@ GWAREGAME_IPATH = \
     -I./evt \
     -I./img \
     -I./log \
+    -I./map \
     -I./util

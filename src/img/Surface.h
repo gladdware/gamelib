@@ -75,6 +75,20 @@ public:
     static SDL_Surface *loadGlTexture(GLuint texId, const char *filename);
 
     /**
+     * Bind the given SDL surface to the OpenGL texture with the given texture
+     * ID.
+     *
+     * Texture IDs must be created with glGenTextures.
+     *
+     * Users are responsible for freeing OpenGL textures.
+     *
+     * @param texId The OpenGL texture ID
+     * @param tex The SDL surface to bind
+     * @return true if the texture was bound successfully
+     */
+    static bool bindGlTexture(GLuint texId, SDL_Surface *tex);
+
+    /**
      * Shortcut for drawing a texture on an OpenGL quad primitive. Draws an
      * OpenGL quad at the given location with the given size with the texture
      * mapped on top of it. Assumes the given texture ID maps to a texture that

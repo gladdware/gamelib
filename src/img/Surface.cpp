@@ -83,12 +83,26 @@ SDL_Surface *Surface::loadGlTexture(GLuint texId, const char *filename) {
     SDL_Surface *tmp = load(filename);
 
     if(tmp == NULL) {
+        return NULL;
+    }
+
+    // bind texture
+    if(!bindGlTexture(texId, tmp)) {
+        SDL_FreeSurface(tmp);
+        return NULL;
+    } else {
+        return tmp;
+    }
+}
+
+bool Surface::bindGlTexture(GLuint texId, SDL_Surface *tex) {
+    if(tex == NULL) {
         return false;
     }
 
     // check if we have alpha
     int mode;
-    if(tmp->format->BytesPerPixel == 4) {
+    if(tex->format->BytesPerPixel == 4) {
         mode = GL_RGBA;
     } else {
         mode = GL_RGB;
@@ -99,7 +113,7 @@ SDL_Surface *Surface::loadGlTexture(GLuint texId, const char *filename) {
 
     // create the texture
     glBindTexture(GL_TEXTURE_2D, texId);
-    glTexImage2D(GL_TEXTURE_2D, 0, mode, tmp->w, tmp->h, 0, mode, GL_UNSIGNED_BYTE, tmp->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, mode, tex->w, tex->h, 0, mode, GL_UNSIGNED_BYTE, tex->pixels);
     // set texture params
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -107,10 +121,9 @@ SDL_Surface *Surface::loadGlTexture(GLuint texId, const char *filename) {
     // check for errors
     if(OpenglErr::checkErrs()) {
         LOG(ERROR) << "Failed to create OpenGL texture";
-        SDL_FreeSurface(tmp);
-        return NULL;
+        return false;
     } else {
-        return tmp;
+        return true;
     }
 }
 
